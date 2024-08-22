@@ -52,21 +52,22 @@
       - Login/Logout button helps you to register/login or logout(stop the session). All data is stored in the shop.db.
       - Orders and cart buttons navigate to corresponding page
 
-    2. index.html
+   2. index.html
         - shows about 50 products that the user needs. The main page shows by default the first 50 products. Then when you click category or search in the input you can get other products. Each product is a card with an 'add to cart' button. Clicking to this button the product will be added to the cart and you will see the number of products in the cart near the cart button (for the beginning is 0). When you click to the cart, it navigates you to the products.html for detailed information.
 
-    3. cart.html
+   3. cart.html
         - shows products that user add via add to cart button (in index.html and products.html)
         - information is maintained during an active session. After logout the cart will be empty.
         - make an order button helps to make the order (add all necessary information into shop.db) and redirect to the orders.html
 
-    4. orders.html
+   4. orders.html
         - shows all recent orders that were made by the user. The information is stored in the shop.db.
-    5. products.html
+        - 
+   5. products.html
         - shows detailed information about the product. All information are from API (nutrients, where produced and so on)
 
-    **Python code:**
-    - I separated the python code into 2 files (app.py, fuctnions.py and config.py)
-    - app.py is mostly the file for routes
-    - functions.py - for functions that I used in app.py
-    - config.py hepls me to configure the cache that I can use in functions.py and app.py.
+**Python code:**
+- I separated the python code into 2 files (app.py, fuctnions.py and config.py)
+- app.py is mostly the file for routes
+- functions.py - for functions that I used in app.py
+- config.py hepls me to configure the cache that I can use in functions.py and app.py.
