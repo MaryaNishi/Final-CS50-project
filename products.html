@@ -1,0 +1,130 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Products
+{% endblock %}
+
+{% block main %}
+<div class="d-flex flex-column main">
+    <div class="px-md-5 px-4 mt-5 name">
+        <strong>{{ card.product_name }} / {{ card.brands }} / {{ card.quantity }}</strong>
+    </div>
+    <div class="d-flex flex-lg-row flex-column p-4 pt-lg-5 general-info">
+        <div class="general-info-items g-item1">
+            <img src="{{ card.image_url }}" class="product-image" alt="{{ card.product_name }}">
+        </div>
+        <div class="d-flex flex-column p-5 general-info-items g-item2">
+           <div class="py-3 info-items">
+            <strong>Brands:</strong> {{ card.brands }}
+           </div>
+           <div class="py-3 info-items">
+            <strong>Labels, certifications, awards:</strong> {{ card.labels_tags_en | modify_card}}
+           </div>
+           <div class="py-3 info-items">
+            <strong>Ingredients:</strong> {{ card.ingredients_tags_en | modify_card }}
+           </div>
+           <div class="py-3 info-items">
+            <strong>Countries where sold:</strong> {{ card.countries_tags_en | modify_card }}
+           </div>
+        </div>
+        <div class="d-flex flex-column general-info-items g-item3">
+            <div class="d-flex flex-column p-3 cart">
+                <span class="p-3 price-span"><strong>100$/piece</strong></span>
+                <form class="d-flex form-button-cart" action="/cart" method="POST">
+                    <input class='input-cart' type="hidden" name="id" value="{{ card.code }}">
+                    <button type="button" value='{{ card.code }}' class="btn btn-primary button-cart btn-buy">Add to cart</button>
+                </form>
+                <div class="register-discount p-4">
+                    Register and get personalized discounts of up to 20% on the current assortment
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="discription">
+        <div class="px-md-5 px-4 mt-5 name">
+            <strong>About product:</strong>
+        </div>
+        <div class="d-flex flex-lg-row flex-column py-4 px-sm-4 pt-lg-5 px-0 discription-info">
+            <div class="d-flex flex-column py-3 px-0 px-sm-3 d-items d-item1">
+                <span class="p-3 price-span "><strong>Nutrient levels:</strong></span>
+                <div class="d-flex flex-column p-3 cart mx-auto nutri">
+                    <div class="py-3 info-items">
+
+                        {% for nutriment in card.nutrient_levels_tags_en %}
+                            <div class="p-3 nutriment">
+                                <div class="circle"></div>
+                                <span class="px-3">  {{ nutriment }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-column py-3 px-0 px-sm-3 d-items d-item2 nutri mx-auto">
+                <table class="table table-striped" style="--bs-table-striped-bg: #e4f0e4">
+                    <thead class="thead-dark">
+                        <tr>
+                            <td><strong>Nutrition facts</strong></td>
+                            <td><strong>As sold
+                                per serving (100g)</strong></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% set nutriments = card.nutriments | get_nutriments %}
+
+                        {% for key, value in nutriments.items() %}
+                        <tr>
+                            <td>{{ key }}</td>
+                            <td>{{ value }}</td>
+                        </tr>
+                       {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+    function color_circle() {
+        const nutriments = document.querySelectorAll('.nutriment');
+        
+        nutriments.forEach(nutriment => {
+
+            let circle = nutriment.querySelector('.circle');
+            
+            if (nutriment) {
+                if (nutriment.textContent.includes('high')) {
+                    circle.style.backgroundColor = '#be1d1d';
+                }
+                else if (nutriment.textContent.includes('moderate')) {
+                    circle.style.backgroundColor = '#e0c25d';
+                }
+            }
+        })
+    }
+
+    function button_cart() {
+        const button = document.querySelector('.button-cart');
+
+        button.addEventListener('click', function() {
+            let input = document.querySelector('.input-cart');
+            let form = document.querySelector('.form-button-cart');
+            form.submit();
+        })
+    }
+
+        
+
+    document.addEventListener('DOMContentLoaded', function() {
+        color_circle();
+        add_to_cart();
+    });
+
+</script>
+    {% endblock %}

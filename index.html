@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Main
+{% endblock %}
+
+{% block main %}
+
+
+<div class="m-item m-item1">
+    <div class="scrollable-divs-advert px-md-5 px-4">
+            <div class="rectangle">
+                <img src="https://food.unl.edu/newsletters/images/grilled-kabobs.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://cdn.pixabay.com/photo/2016/10/09/16/57/sale-1726232_640.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://visitludington.com/wp-content/uploads/gemma-stpjHJGqZyw-unsplash-copy.jpg" class="img-advert-top" alt="advert">
+            </div> 
+            <div class="rectangle">
+                <img src="https://cdn.pixabay.com/photo/2016/10/09/16/57/sale-1726232_640.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://www.bigbasketco.com/wp-content/uploads/good-l-corp-what-americas-best-grocery-stores-have-in-common-1024x768.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://cdn.pixabay.com/photo/2016/10/09/16/57/sale-1726232_640.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://lh3.googleusercontent.com/EnON3lIVIratgEZsR8JQLMAK0OYiju9Non6F1x-rOj2apFybjmyO7YPeL3NfVeBxuYkCUJxzms4DkdTY8vytOKjjvswhsqZ3y5VlvDzZ=w900-rw" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://cdn.pixabay.com/photo/2016/10/09/16/57/sale-1726232_640.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://static.blog.bolt.eu/LIVE/wp-content/uploads/2022/04/30135418/grocery-list-1024x536.jpg" class="img-advert-top" alt="advert">
+            </div>
+            <div class="rectangle">
+                <img src="https://cdn.pixabay.com/photo/2016/10/09/16/57/sale-1726232_640.jpg" class="img-advert-top" alt="advert">
+            </div>
+    </div>
+</div>
+<div class="m-item m-item2  px-md-5 px-4">
+    <div class="popular-products">
+        <strong>{{ general_name_products }}</strong>
+    </div>
+    <form  id="card-form" action="/products" method="get">
+        <input type="hidden" name="card" id="input-cards">
+        <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-4">
+            {% for card in cards %}
+                <div class="col">
+                    <div class="card" id="{{ card.code }}" type="button">
+                        <div class="c-item c-item1">
+                            <img src="{{ card.image_url }}" class="card-img-top {{ card.class_name }}" alt="product">
+                        </div>
+                        <div class="card-body c-item c-item2">
+                            <div class="inscription inscription1">
+                                <strong>100$</strong>
+                            </div>
+                            <div class="inscription inscription2">
+                                {{ card.product_name }} / {{ card.brands }} / {{ card.quantity }}
+                            </div>
+                            <div class="inscription inscription3">
+                                <button type="button" value='{{ card.code }}' class="btn btn-success btn-buy">Add to cart</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+
+{% block script %}
+
+<script>
+
+    function handleClickCard(event) {
+
+        let exceptionElements = document.querySelectorAll('.btn-buy');
+
+        if (!Array.from(exceptionElements).some(element => element.contains(event.target))) {
+            let input = document.getElementById('input-cards');
+            let form = document.getElementById('card-form');
+
+            input.value = this.id;
+            form.submit();  
+        }
+    }
+
+    function product_info() {
+        let cards = document.querySelectorAll('.card')
+
+        cards.forEach(card => {
+            card.addEventListener('click', handleClickCard);
+        })
+    }
+  
+
+    document.addEventListener('DOMContentLoaded', function() {
+        product_info();
+        add_to_cart();
+    });
+
+</script>
+
+{% endblock %}
+
+

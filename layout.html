@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap" rel="stylesheet">
+
+
+    <link href="/static/index.css" rel="stylesheet">
+    <title>Yummy Store: {% block title%}{% endblock %}</title>
+
+</head>
+
+<body class="flex-container">
+    <header class="flex-item flex-container">
+        <div class="h-item h-item1">
+            <nav class="navbar navbar-expand-xl">
+                <div class="container-fluid px-md-5 px-4">
+                    <a class="navbar-brand" href="/">Yummy</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                            <li class="nav-item">
+                                <a class="nav-link inactive" aria-current="page" href="#">Contacts: <span style="color: green">(+1) *** *** ****</span> | </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-envelope"></i> our_email@gmail.com </a>
+                            </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              About Company
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">About us</a></li>
+                              <li><a class="dropdown-item" href="#">Vacancies</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                              Contacts
+                            </a>
+                            <ul class="dropdown-menu">
+                              <li><a class="dropdown-item" href="#">Address</a></li>
+                              <li><a class="dropdown-item" href="#">Credentials</a></li>
+                              <li><hr class="dropdown-divider"></li>
+                              <li><a class="dropdown-item" href="#">Sales Department</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                  </div>
+                </div>
+              </nav>
+        </div>
+        <div class="h-item h-item2">
+            <div class="d-flex flex-column flex-xl-row px-md-5 px-4 header-container ">
+                <form class="d-flex search-container mb-3 mb-lg-0 order-xl-1 order-2" id="all-result-form" action="/" method="POST" role="search">
+                        <div class="btn-catalog">
+                            <button class="btn btn-success btn-in-catalog no-hide-catalog" type="button"> <span class="burger-menu" id="burgerMenu">&#9776;</span><span class="catalog-menu">Catalog</span></button>
+                        </div>
+                        <div class="input-container no-hide">
+                                <input id="referenceDiv" class="form-control transparent-input" autocomplete="off" type="search" placeholder="Search" aria-label="Search" name="q">
+                                <div class="options-container">
+                                    <div class="options-div" type="button">
+        
+                                    </div>
+                                    <div class="all-options px-4" style="display: none;">
+                                        <a id="all-results" href="#" style="color: green">All results</a> 
+                                    </div>
+                                </div>
+                        </div>
+                        <div class="spinner" style="display: none;">
+                            <div class="spinner-border text-success" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                        <div class="d-flex btn-search-container no-hide">
+                            <button class="btn btn-outline-success btn-search" type="button"><i class="fas fa-search"></i></button>
+                        </div>
+                </form>
+                <ul class="nav order-xl-2 order-1"> 
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary btn-login" type='button' href="#"><i class="fas fa-user"></i><span class='ps-3' id="login-text">LogIn</span><span>  |</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link text-secondary orders-link" href="/orders"><i class="fas fa-box"></i> Orders</a>
+                    </li>
+                    <li class="nav-item cart-link">
+                        <a class="nav-link text-secondary cart-inner-link" href="/cart">
+                            <i class="fas fa-shopping-cart"></i> Cart 
+                            <span class="badge text-bg-success">
+                                {% if cart is not none %}
+                                    {{ cart|length}}
+                                {% else %}
+                                    0
+                                {% endif %}
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="alert-container"></div>
+        {% block header %}{% endblock %}
+    </header>
+    <main>
+        <form id="catalog-form" action="/" method="POST">
+            <div class="catalog-item ms-md-5 ms-4" style="display: none;">
+                <div class="scrollable-divs-ctg">
+                    <input type="hidden" name="category" id="input-category">
+                    {% for category in categories %}
+                    <div role='button' class="rectang rectangle-ctg" id="{{ category.id }}" style="height: 3rem;">
+                        {{ category.name }}
+                    </div> 
+                    {% endfor %}
+                </div>
+            </div>
+        </form>
+            <form class="outer-login-container" style="display: none;" action="/login" method="POST"> 
+                <div class="d-flex p-4 flex-column login-container">
+                    <div class="d-flex p-1 mb-4 login-item1 border">
+                        <div class="p-2 option-button register" type="button">
+                            Register
+                        </div>
+                        <div class="p-2 option-button login login-blue" type="button">
+                            LogIn
+                        </div>
+                    </div>
+                    <div  class="login-item3">
+                        <input class="border email-input p-3 mb-4" type="text" autocomplete="off" placeholder="Username" name="username">
+                    </div>
+                    <div  class="login-item3">
+                        <input class="border password-input p-3 mb-4" type="password" autocomplete="off" placeholder="Password" name="password">
+                    </div>
+                    <div  class="login-item3">
+                        <input style='display: none;' class="border password-input p-3 mb-4 password-confirmation" type="password" autocomplete="off" placeholder="Password confirmation" name="password-confirmation">
+                    </div>
+                    <div class="p-3 login-item4">
+                        <button type="button" class="btn btn-primary border button-login">LogIn</button>
+                    </div>
+                </div>
+            </form>
+
+       {% block main %}{% endblock %}
+    </main>
+    <footer>
+
+    </footer>
+    <div id="overlay" style="display: none;"></div>
+    <script>
+     const ALERT = `<div class="d-flex mx-md-5 mx-4 mt-3 alert alert-primary alert-dismissible fade show" style='display: none;' role="alert">
+                        <strong><span class="px-2">First you need to logIn</span></strong>
+                        <button type="button" class="px-3 btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>`
+
+        function button_ctg() {
+            let button = document.querySelector('.btn-in-catalog');
+            button.addEventListener('click', function() {
+
+                element = document.querySelector('.catalog-item');
+                if (element.style.display == 'none') {
+                    element.style.display = 'block';
+                }
+                else {
+                    element.style.display = 'none';
+                }
+            })
+        };
+
+        function rectangular() {
+            let elements = document.querySelectorAll('.rectang');
+
+            elements.forEach(element => {
+                element.addEventListener('mouseenter', function() {
+                    element.classList.add('hovered');
+                });
+
+                element.addEventListener('mouseleave', function() {
+                    element.classList.remove('hovered');
+                });
+            })
+        };
+
+        function search() {
+            const button = document.querySelector('.btn-search');
+            button.addEventListener('click', async function() {
+            
+                const catalog = document.querySelector('.catalog-item')
+                if (catalog.style.display = 'block') {
+                    catalog.style.display = 'none'
+                }
+                const spinner = document.querySelector('.spinner');
+                spinner.style.display = 'block';
+
+                const outer_container = document.querySelector('.options-container');
+
+                outer_container.style.display = 'none';
+        
+                const input = document.querySelector('.transparent-input');
+                
+                let response = await fetch('/search?q=' + input.value);
+
+                if (response.ok) {
+
+                    let cards = await response.json();
+
+                    if (cards.length != 0) {
+                        outer_container.style.border= "1px solid green";
+                        const container = document.querySelector('.options-div');
+                        container.innerHTML = '';
+
+                        cards.forEach (card => {
+                                let newDiv = document.createElement('div');
+                                newDiv.className = 'rectang rectangle-option p-3';
+                                newDiv.id = card.code;
+                                newDiv.innerHTML = `
+                                <div class="img-container-options">
+                                    <img src="${card.image_url}" class="${card.class_name} img-option" alt="product">
+                                </div>
+                                <span class="option-product">${card.product_name}</span>`;
+
+                                container.appendChild(newDiv);
+
+                                newDiv.addEventListener('mouseenter', function() {
+                                    newDiv.classList.add('hovered');
+                                });
+
+                                newDiv.addEventListener('mouseleave', function() {
+                                    newDiv.classList.remove('hovered');
+                                });
+
+                                newDiv.addEventListener('click', function() {
+                                    var data = {
+                                        card: this.id
+                                    }
+
+                                    var params = new URLSearchParams(data);
+                                    var newUrl = 'http://127.0.0.1:5000/products?' + params.toString();
+                                    window.location.href = newUrl;
+                                });
+                        });
+
+                        const result = document.querySelector('.all-options');
+                        result.style.display = 'block';
+                        outer_container.style.display = 'block';
+                }
+
+                spinner.style = 'display: none;';
+            }
+            
+                else {
+                    console.error('Error fetching data:', response.statusText);
+                }
+            });
+        };
+
+
+
+        function helperClickOutside(event, container_class, exceptions_class, overlay=false) {
+            const container = document.querySelector(container_class);
+            const exceptionElements = document.querySelectorAll(exceptions_class);
+
+            if (container && !container.contains(event.target) &&
+                !Array.from(exceptionElements).some(element => element.contains(event.target))) {
+                container.style.display = 'none';
+
+                if (overlay) {
+                    document.querySelector('#overlay').style.display = 'none';
+                }
+            }
+        };
+
+        function handleClickOutside(event) {
+
+            helperClickOutside(event, ".options-container", '.no-hide');
+
+
+           helperClickOutside(event, ".catalog-item", '.no-hide-catalog');
+
+
+           helperClickOutside(event, ".outer-login-container", '.btn-login', overlay=true);
+
+        };
+
+        function hide_click() {
+            document.addEventListener('click', handleClickOutside);
+        };
+
+        function matchWidth() {
+
+            const container = document.querySelector('.options-container');
+
+            if (window.matchMedia("(min-width: 575.98px)").matches) {
+
+                if (container.classList.contains('small-options-container')) {
+                    container.classList.remove('small-options-container');
+                }
+                const referenceDiv = document.getElementById('referenceDiv');
+                const referenceWidth = referenceDiv.offsetWidth;
+                container.style.width = referenceWidth + 'px';
+            }
+            else {
+                container.style.width = '100vw';
+                container.classList.add('small-options-container');
+            }
+        };
+
+        function submit() {
+            let buttons = document.querySelectorAll('.rectangle-ctg');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function() {
+                    let input = document.getElementById('input-category');
+                    let form = document.getElementById('catalog-form');
+
+                    input.value = this.id;
+                    form.submit();
+                })
+            });
+
+            let link = document.querySelector('#all-results');
+            link.addEventListener('click', function() {
+                let input = document.querySelector('.transparent-input');
+                let form = document.getElementById('all-result-form');
+                form.submit();
+            })
+
+        };
+
+
+        function button_login() {
+            const register = document.querySelector('.register');
+            const login = document.querySelector('.login');
+            const password = document.querySelector('.password-confirmation');
+            const button = document.querySelector('.button-login');
+
+            const form = document.querySelector('.outer-login-container');
+
+            register.addEventListener('click', function() {
+                register.classList.add('login-blue');
+                login.classList.remove('login-blue');
+                button.textContent = 'Register';
+                password.style.display = 'block';
+                form.action = '/register';
+            })
+
+            login.addEventListener('click', function() {
+                login.classList.add('login-blue');
+                register.classList.remove('login-blue');
+                button.textContent = 'LogIn';
+                password.style.display = 'none';
+                form.action = '/login';
+            })
+
+            let btn_login = document.querySelector('.btn-login');
+            const text = document.querySelector('#login-text');
+
+            btn_login.addEventListener('click', function() {
+
+                if (text.textContent == 'LogOut') {
+                    form.action = '/logout';
+                    form.submit()
+                }
+                else {
+                    document.querySelector('#overlay').style.display = 'block';
+                    document.querySelector('.outer-login-container').style.display = 'block';
+                }
+            })
+
+            button.addEventListener('click', function() {
+                form.submit();
+            })
+        }
+
+        function login_success() {
+
+            const text = document.querySelector('#login-text');
+            const id = {{ user_id }};
+
+            if ( String(id) != 'None') {
+                text.textContent = 'LogOut';
+            }
+            else {
+                text.textContent = 'LogIn';
+            }
+        }
+
+        function make_alert(event) {
+                if (document.querySelector('#login-text').textContent == 'LogIn') {
+                    event.preventDefault();
+                    document.querySelector('#alert-container').innerHTML = ALERT;
+                }   
+            }
+
+
+
+        function send_query(route, id, delete_all = false) {
+            const data = {item_id: id, delete_all: delete_all};
+
+            fetch(route, {
+                method: 'POST',
+
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+
+                body: JSON.stringify(data)
+            })
+                
+            .then(response => response.json())
+            .then(data => {
+                console.log(data['message']); 
+
+                const badge = document.querySelector('.badge');
+                badge.textContent = data['length'];
+
+                const total_items = document.querySelectorAll('.total-items');
+                let total_sum = document.querySelectorAll('#total-sum');
+                let discount = document.querySelector('#discount');
+                let total_final = document.querySelectorAll('#total-final');
+                let product_items = document.querySelectorAll('.product-items2');
+
+                if (total_items && total_sum && discount && total_final && product_items) {
+                    for (let item of total_items ) {
+                        item.textContent =  data['length'];
+                    }
+                    let words = document.querySelectorAll('.word-item');
+                    for (let word of words) {
+                        if (data['length'] > 1) {
+                            word.textContent = 'items';
+                        }
+                        else {
+                            word.textContent = 'item';
+                        }
+                    } 
+                    for (let total of total_sum) {
+                        total.textContent = 100 * parseInt(data['length']);
+                    } 
+                    discount.textContent = 10 * parseInt(data['length']);
+                    for (let total of total_final) {
+                        total.textContent = 90 * parseInt(data['length']);
+                    } 
+
+                    for (let item of product_items) {
+                        let sum = item.querySelector('.item-sum');
+                        let quantity = item.querySelector('#digit').textContent;
+                        sum.textContent = parseInt(quantity) * 100;
+                    }
+                }
+                return 'Fetch complete'; 
+            })
+
+            .catch(error => {
+                console.error('Error:', error);
+                return 'Fetch failed';
+            })
+        }
+
+        function add_to_cart() {
+            let buttons = document.querySelectorAll('.btn-buy');
+
+            buttons.forEach(button => {
+                button.addEventListener('click', function(event) {
+
+                    make_alert(event);
+                    send_query('/add_to_cart', button.value)
+                })
+            })
+
+            document.querySelector('.cart-inner-link').addEventListener('click', make_alert);
+            document.querySelector('.orders-link').addEventListener('click', make_alert);
+        }
+
+       
+
+        document.addEventListener('DOMContentLoaded', function() {
+            button_ctg();
+            rectangular();
+            matchWidth();
+            search();
+            hide_click();
+            submit();
+            button_login();
+            login_success();
+            window.addEventListener('resize', matchWidth);
+        });
+
+        
+    </script>
+    
+    {% block script %}{% endblock %}
+</body>
+
+</html>

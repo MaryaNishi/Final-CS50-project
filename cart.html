@@ -1,0 +1,191 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+    Cart
+{% endblock %}
+
+{% block main %}
+    <div class="px-md-5 px-4 mt-5 cart-header">
+        <strong>Cart</strong>
+    </div>
+
+    {% if total_cart == 0 %}
+    <div class="mx-md-5 mx-4 mt-3 alert alert-primary alert-empty-cart" role="alert">
+        The cart is empty!
+    </div>
+    {% endif %}
+    <div class="d-flex flex-lg-row flex-column p-4 cart-container">
+        <div class="cart-items cart-item1">
+            <div class="px-sm-4 py-4 whole-cart">
+                <div class="px-sm-4 py-4 m-0 register-discount cart-discount">
+                    Register and get personalized discounts of up to 20% on the current assortment
+                </div>
+
+                {% for card in cards %}
+                <div class="d-flex flex-md-row flex-column px-sm-4 py-4 product-info-container" id="{{ card.code }}">
+                    <div class="d-flex product-items1">
+                        <div class='px-2 product-img-cart'>
+                            <img src="{{ card.image_url }}" class="img-option {{ card.class_name }}" alt="{{ card.product_name }}">
+                        </div>
+                        <div class="d-flex px-2 product-cart">{{ card.product_name }} / {{ card.brands }} / {{ card.quantity }}</div>
+                    </div>
+                    <div class="d-flex product-items2" style="align-items: center;">
+                        <div class="px-2">100$ / item</div>
+    
+                        <div class="d-flex m-2 increase-buttons" id="{{ card.code }}">
+                            <button class="px-2 change-button btn-decrease" style="font-size:3rem;">-</button>
+                            <div class='px-2 ' style="flex: 2; text-align: center;"><span class="pe-2" id="digit">{{ card.count }}</span>item</div>
+                            <button class="px-2 change-button btn-increase">+</button>
+                        </div>
+    
+                        <div class="px-2"><strong><span class="item-sum">{{ 100 * card.count }}</span>$</strong></div>
+                        <div class="px-2 delete" type="button"><i class="fas fa-trash"></i></div>
+                    </div>
+                </div>
+                <hr style="width: 90%;">
+                {% endfor %}
+                <div class="d-flex px-sm-4 py-4 product-info-container info-cart-total">
+                    <div class="px-2">Total: </div>
+                    <div class="d-flex">
+                        <div class="px-2">
+                            <span class="pe-2 total-items">{{ total_cart }}</span> 
+                            <span class="word-item">
+                                {% if total_cart > 1%}
+                                    items
+                                {% else %}
+                                    item
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="px-2"><span id="total-final">{{ total_cart * 90 }}</span>$</div>
+                    </div>
+                </div>
+                <form class="d-flex flex-column py-4 btn-order-container" action="/make_order" method="POST">
+                    <button type="button" class="btn btn-primary btn-order btn-login">Make an order</button>
+                    <span class="py-4" style="color: grey;"><i class="fas fa-info-circle info-icon px-2"></i> A manager will call you back to coordinate the details of the order</span>
+                </form>
+            </div>
+        </div>
+        <div class="cart-items cart-item2">
+            <div class="d-flex flex-column p-3 cart order-info">
+                <span class="p-3 price-span info-cart-header"><strong>Order information</strong></span>
+                <div class="d-flex p-3 order-info-container">
+                    <div class="pe-3 icon-truck">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <div class="d-flex flex-column order-info-item">
+                        <div>Order</div>
+                        <div>Items (<span  class='px-1 total-items'>{{ total_cart }}</span>) </div>
+                    </div>
+                    <div class="d-flex flex-column order-info-item order-info-item2">
+                        <div>Date: tomorrow</div>
+                        <div><span id="total-final">{{ total_cart * 90 }}</span>$</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="p-3 cart">
+                    <input class="transparent-input promo-code" autocomplete="off" type="search" placeholder="Promo code" aria-label="Search">
+                </div>
+                <hr>
+                <div class="d-flex p-3" style="height: 140px;">
+                    <div class="d-flex flex-column order-info-item">
+                        <div><strong>Your order</strong></div>
+                        <div>Goods</div>
+                        <div>Discount</div>
+                    </div>
+                    <div class="d-flex flex-column order-info-item order-info-item2">
+                        <div style="color: grey;">
+                            <span class="total-items">{{ total_cart }}</span>
+                            <span class="word-item">
+                                {% if total_cart > 1%}
+                                    items
+                                {% else %}
+                                    item
+                                {% endif %}
+                            </span>
+                            </div>
+                        <div><span id="total-sum">{{ total_cart * 100 }}</span>$</div>
+                        <div><span id="discount">{{ total_cart * 10 }}</span>$</div>
+                    </div>
+                </div>
+                <hr>
+                <div class="d-flex p-3" style="justify-content: space-between;">
+                    <div><strong>Total due:</strong></div>
+                    <div><strong><span id="total-final">{{ total_cart * 90 }}</span>$</strong></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+<script>
+
+    function change_button() {
+        let buttons = document.querySelectorAll('.increase-buttons');
+
+        buttons.forEach(button => {
+            let btn_decrease = button.querySelector('.btn-decrease');
+            let btn_increase = button.querySelector('.btn-increase');
+
+            btn_decrease.addEventListener('click', function() {
+                let digit = button.querySelector('#digit');
+                let sum = parseInt(digit.textContent);
+                if (sum != 1) {
+                    digit.textContent = sum - 1;
+                    send_query('/remove_from_cart', button.id);
+                }
+            })
+
+            btn_increase.addEventListener('click', function() {
+                let digit = button.querySelector('#digit');
+                let sum = parseInt(digit.textContent);
+                digit.textContent = sum + 1;
+                send_query('/add_to_cart', button.id);
+            })
+        })
+    }
+
+    async function trash() {
+        let buttons = document.querySelectorAll('.delete');
+
+        for (let button of buttons) {
+            button.addEventListener('click', async function() {
+                let container = button.closest('.product-info-container');
+                let hr = container.nextElementSibling;
+
+                let digit = container.querySelector('#digit');
+                let quantity = parseInt(digit.textContent);
+                
+                send_query('/remove_from_cart', container.id, delete_all = true);
+       
+                container.remove();
+                hr.remove();
+            })
+        }  
+    }
+
+
+    function ordered() {
+        const items = {{ total_cart }};
+        const button = document.querySelector('.btn-order');
+
+        button.addEventListener('click', function() {
+            if (items > 0 && document.querySelector('.total-items').textContent > 0 ) {
+                const form = document.querySelector('.btn-order-container');
+                form.submit();
+            }
+        })  
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+        change_button();
+        ordered();
+        trash();
+    });
+
+
+</script>
+{% endblock %}
